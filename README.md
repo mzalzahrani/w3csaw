@@ -7,6 +7,12 @@ IIS W3C logs. It is inspired by the offline hunting workflow of tools like
 Chainsaw, but instead of scanning Windows EVTX, it parses IIS web access logs
 and applies web-focused detection rules.
 
+> **Looking to hunt Windows event logs?** W3CSaw is for IIS web access logs, not
+> EVTX. If you need to hunt Windows Event Logs, check out
+> [Chainsaw](https://github.com/WithSecureLabs/chainsaw) — the two are
+> complementary: run Chainsaw on the EVTX and W3CSaw on the IIS logs from the
+> same server, then correlate the timelines.
+
 ```
 w3csaw scan -i "C:\inetpub\logs\LogFiles\W3SVC1\*.log" -o findings.jsonl --summary
 ```
