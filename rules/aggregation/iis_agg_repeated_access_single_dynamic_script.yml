@@ -1,0 +1,36 @@
+id: iis_agg_repeated_access_single_dynamic_script
+title: IIS Repeated Successful Access to One Dynamic Script by Single Source
+status: experimental
+description: >
+  Detects a single source IP repeatedly and successfully accessing the same
+  dynamic script in a short window. Sustained interaction with one endpoint from
+  one source can indicate active web shell usage, especially on endpoints with
+  little normal traffic.
+level: medium
+tags:
+  - attack.t1505.003
+logsource:
+  product: iis
+  service: w3c
+type: aggregation
+aggregation:
+  variant: threshold
+  group_by:
+    - src_ip
+    - uri_path
+  filter:
+    status:
+      gte: 200
+      lt: 300
+  count_gte: 40
+  window_minutes: 10
+fields:
+  - timestamp
+  - src_ip
+  - uri_path
+  - status
+  - user_agent
+falsepositives:
+  - Dashboards, polling widgets, and SPA endpoints refreshed frequently
+references:
+  - https://attack.mitre.org/techniques/T1505/003/

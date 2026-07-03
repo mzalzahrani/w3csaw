@@ -1,0 +1,44 @@
+id: iis_scanner_user_agent
+title: IIS Request From Known Scanner User Agent
+status: stable
+description: Detects user agents belonging to common vulnerability scanners and content discovery tools.
+level: low
+tags:
+  - attack.t1595.002
+  - attack.t1046
+logsource:
+  product: iis
+  service: w3c
+detection:
+  selection:
+    user_agent|contains_any:
+      - "sqlmap"
+      - "nikto"
+      - "nuclei"
+      - "nessus"
+      - "acunetix"
+      - "dirbuster"
+      - "gobuster"
+      - "feroxbuster"
+      - "wfuzz"
+      - "ffuf"
+      - "masscan"
+      - "zgrab"
+      - "nmap"
+      - "whatweb"
+      - "wpscan"
+      - "havij"
+      - "python-requests"
+  condition: selection
+fields:
+  - timestamp
+  - src_ip
+  - method
+  - uri_path
+  - status
+  - user_agent
+falsepositives:
+  - Authorized vulnerability scans
+  - Internal automation using python-requests
+references:
+  - https://attack.mitre.org/techniques/T1595/002/

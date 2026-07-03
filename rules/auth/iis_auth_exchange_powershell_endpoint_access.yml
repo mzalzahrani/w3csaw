@@ -1,0 +1,41 @@
+id: iis_auth_exchange_powershell_endpoint_access
+title: IIS Exchange PowerShell/ECP Endpoint Access
+status: experimental
+description: >
+  Detects access to Exchange remote PowerShell and ECP backend endpoints that
+  are commonly abused in ProxyShell/ProxyNotShell-style chains for
+  post-authentication code execution and mailbox export.
+level: high
+tags:
+  - attack.t1190
+  - attack.t1059.001
+logsource:
+  product: iis
+  service: w3c
+detection:
+  selection:
+    uri_path_decoded|contains_any:
+      - "/powershell"
+      - "/ecp/ddi/ddiservice.svc"
+      - "/ecp/proxylogon"
+      - "/mapi/emsmdb"
+      - "/ews/exchange.asmx"
+    uri_query_decoded|contains_any:
+      - "x-rps-cat"
+      - "email=autodiscover"
+      - "encoding=xml"
+      - "clientapplication="
+  condition: selection
+fields:
+  - timestamp
+  - src_ip
+  - method
+  - uri_path
+  - uri_query
+  - status
+  - user_agent
+falsepositives:
+  - Legitimate Exchange administration and mail client traffic (correlate with source IP and authentication)
+references:
+  - https://www.cisa.gov/news-events/cybersecurity-advisories/aa21-209a
+  - https://attack.mitre.org/techniques/T1190/

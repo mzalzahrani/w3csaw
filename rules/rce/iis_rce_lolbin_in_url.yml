@@ -1,0 +1,45 @@
+id: iis_rce_lolbin_in_url
+title: IIS Living-off-the-Land Binary Reference in URL
+status: stable
+description: >
+  Detects references to Windows living-off-the-land binaries (LOLBins) commonly
+  abused for download and execution in the decoded URL. Their appearance in web
+  requests suggests attempted command execution through a web shell or exploited
+  endpoint.
+level: high
+tags:
+  - attack.t1059
+  - attack.t1105
+  - attack.t1218
+logsource:
+  product: iis
+  service: w3c
+detection:
+  selection:
+    url_decoded|contains_any:
+      - "certutil"
+      - "bitsadmin"
+      - "mshta"
+      - "rundll32"
+      - "regsvr32"
+      - "wmic "
+      - "schtasks"
+      - "wscript"
+      - "cscript"
+      - "msiexec"
+      - "installutil"
+  condition: selection
+fields:
+  - timestamp
+  - src_ip
+  - method
+  - uri_path
+  - uri_query
+  - status
+  - user_agent
+falsepositives:
+  - Security documentation or knowledge-base endpoints referencing these tools
+  - Authorized administration tooling
+references:
+  - https://lolbas-project.github.io/
+  - https://attack.mitre.org/techniques/T1218/

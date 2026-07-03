@@ -1,0 +1,34 @@
+id: iis_scanning_missing_or_empty_user_agent
+title: IIS Missing or Empty User Agent
+status: experimental
+description: >
+  Detects requests with a missing or empty user-agent header. While some
+  legitimate clients omit it, automated scanners, exploit scripts, and crude
+  bots frequently do, making this a useful low-severity triage signal when
+  combined with other findings.
+level: low
+tags:
+  - attack.t1595
+logsource:
+  product: iis
+  service: w3c
+detection:
+  selection_missing:
+    user_agent|not_exists: true
+  selection_empty:
+    user_agent|in:
+      - "-"
+      - ""
+  condition: selection_missing or selection_empty
+fields:
+  - timestamp
+  - src_ip
+  - method
+  - uri_path
+  - status
+  - user_agent
+falsepositives:
+  - Health checks, uptime monitors, and some API clients that omit user agent
+  - Load balancer probes
+references:
+  - https://attack.mitre.org/techniques/T1595/

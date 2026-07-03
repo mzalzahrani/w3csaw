@@ -1,0 +1,34 @@
+id: iis_webshell_random_script_name
+title: IIS Successful Access to Random-Looking Dynamic Script Name
+status: experimental
+description: >
+  Detects successful requests to dynamic script files whose names look randomly
+  generated (long alphanumeric strings). Attackers frequently drop web shells
+  under randomized filenames to avoid guessable names and blend into content
+  directories. This rule is heuristic and should be tuned per application.
+level: medium
+tags:
+  - attack.t1505.003
+logsource:
+  product: iis
+  service: w3c
+detection:
+  selection:
+    status:
+      gte: 200
+      lt: 300
+    uri_path_decoded|re:
+      - '/[a-z0-9]{12,}\.(aspx|ashx|asmx|asp)$'
+  condition: selection
+fields:
+  - timestamp
+  - src_ip
+  - method
+  - uri_path
+  - status
+  - user_agent
+falsepositives:
+  - Applications that generate hashed or GUID-like script names
+  - Bundled/minified handler names
+references:
+  - https://attack.mitre.org/techniques/T1505/003/

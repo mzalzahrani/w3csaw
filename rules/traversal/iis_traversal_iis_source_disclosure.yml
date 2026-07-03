@@ -1,0 +1,36 @@
+id: iis_traversal_iis_source_disclosure
+title: IIS Source Code Disclosure Trick
+status: experimental
+description: >
+  Detects classic IIS source-disclosure tricks that append NTFS alternate data
+  stream or special suffixes to script paths (::$DATA, trailing dot, %20) to
+  retrieve raw source instead of executing the script.
+level: medium
+tags:
+  - attack.t1190
+  - attack.t1083
+logsource:
+  product: iis
+  service: w3c
+detection:
+  selection:
+    url_original|contains_any:
+      - "::$data"
+      - "%3a%3a%24data"
+      - ".aspx%20"
+      - ".asp%20"
+      - ".aspx%00"
+      - ".aspx."
+  condition: selection
+fields:
+  - timestamp
+  - src_ip
+  - method
+  - uri_path
+  - status
+  - user_agent
+falsepositives:
+  - Malformed client requests with stray trailing characters
+references:
+  - https://learn.microsoft.com/en-us/iis/
+  - https://owasp.org/www-community/attacks/Full_Path_Disclosure

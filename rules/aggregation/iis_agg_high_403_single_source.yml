@@ -1,0 +1,33 @@
+id: iis_agg_high_403_single_source
+title: IIS High 403 Forbidden Volume From Single Source
+status: experimental
+description: >
+  Detects a source IP receiving many HTTP 403 responses in a window, often
+  associated with forced browsing, access-control probing, or WAF/authorization
+  denials during an attack.
+level: low
+tags:
+  - attack.t1595.003
+logsource:
+  product: iis
+  service: w3c
+type: aggregation
+aggregation:
+  variant: threshold
+  group_by:
+    - src_ip
+  filter:
+    status: 403
+  count_gte: 100
+  window_minutes: 60
+fields:
+  - timestamp
+  - src_ip
+  - uri_path
+  - status
+  - user_agent
+falsepositives:
+  - Misconfigured clients repeatedly hitting protected resources
+  - Aggressive crawlers denied by authorization
+references:
+  - https://attack.mitre.org/techniques/T1595/003/

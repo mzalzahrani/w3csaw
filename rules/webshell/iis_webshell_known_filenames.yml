@@ -1,0 +1,41 @@
+id: iis_webshell_known_filenames
+title: IIS Access to Known Web Shell Filename
+status: experimental
+description: Detects requests to filenames commonly used by dropped web shells (China Chopper, ASPX shells, etc.).
+level: critical
+tags:
+  - attack.t1505.003
+logsource:
+  product: iis
+  service: w3c
+detection:
+  selection:
+    uri_path_decoded|contains_any:
+      - "/shell.aspx"
+      - "/cmd.aspx"
+      - "/cmdasp.aspx"
+      - "/chopper.aspx"
+      - "/caidao.aspx"
+      - "/wso.aspx"
+      - "/b374k"
+      - "/c99.aspx"
+      - "/r57.aspx"
+      - "/webshell"
+      - "/eval.aspx"
+      - "/upload_shell"
+      - "/spy.aspx"
+      - "/tunnel.aspx"
+      - "/reGeorg"
+  condition: selection
+fields:
+  - timestamp
+  - src_ip
+  - method
+  - uri_path
+  - status
+  - user_agent
+falsepositives:
+  - Security scanning tools probing for web shells (correlate with status codes)
+references:
+  - https://attack.mitre.org/techniques/T1505/003/
+  - https://www.cisa.gov/news-events/analysis-reports/ar21-112a

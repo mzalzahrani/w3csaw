@@ -1,0 +1,44 @@
+id: iis_webshell_command_execution_query
+title: IIS Possible Web Shell Command Execution via Query String
+status: experimental
+description: Detects command-execution keywords in query strings targeting dynamic IIS script endpoints.
+level: high
+tags:
+  - attack.t1505.003
+  - attack.t1059
+logsource:
+  product: iis
+  service: w3c
+detection:
+  selection:
+    status:
+      gte: 200
+      lt: 300
+    uri_path|endswith_any:
+      - ".aspx"
+      - ".ashx"
+      - ".asmx"
+      - ".svc"
+    uri_query_decoded|contains_any:
+      - "cmd="
+      - "exec="
+      - "whoami"
+      - "ipconfig"
+      - "powershell"
+      - "certutil"
+      - "bitsadmin"
+      - "net user"
+  condition: selection
+fields:
+  - timestamp
+  - src_ip
+  - method
+  - uri_path
+  - uri_query
+  - status
+  - user_agent
+falsepositives:
+  - Internal diagnostics
+  - Authorized testing
+references:
+  - https://attack.mitre.org/techniques/T1505/003/

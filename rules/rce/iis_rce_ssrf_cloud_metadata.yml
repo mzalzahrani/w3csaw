@@ -1,0 +1,37 @@
+id: iis_rce_ssrf_cloud_metadata
+title: IIS SSRF Targeting Cloud Metadata Service
+status: stable
+description: >
+  Detects server-side request forgery attempts targeting cloud instance
+  metadata services (AWS/Azure/GCP link-local 169.254.169.254 and metadata
+  hostnames). Successful SSRF to metadata can expose cloud credentials.
+level: high
+tags:
+  - attack.t1190
+  - attack.t1552.005
+logsource:
+  product: iis
+  service: w3c
+detection:
+  selection:
+    url_decoded|contains_any:
+      - "169.254.169.254"
+      - "metadata.google.internal"
+      - "/latest/meta-data"
+      - "/computemetadata/v1"
+      - "/metadata/instance"
+      - "metadata.azure.com"
+      - "100.100.100.200"
+  condition: selection
+fields:
+  - timestamp
+  - src_ip
+  - method
+  - uri_path
+  - uri_query
+  - status
+falsepositives:
+  - Legitimate cloud tooling or health checks referencing metadata endpoints
+references:
+  - https://attack.mitre.org/techniques/T1552/005/
+  - https://owasp.org/www-community/attacks/Server_Side_Request_Forgery

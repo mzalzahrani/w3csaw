@@ -1,0 +1,47 @@
+id: iis_webshell_file_manager_parameters
+title: IIS Web Shell File Manager Parameters
+status: experimental
+description: >
+  Detects file-management parameters (path, dir, download, delete, rename,
+  edit) sent to dynamic IIS scripts, a hallmark of web shell file browsers used
+  to enumerate and manipulate the web root after initial compromise.
+level: medium
+tags:
+  - attack.t1505.003
+  - attack.t1083
+logsource:
+  product: iis
+  service: w3c
+detection:
+  selection:
+    uri_path_decoded|endswith_any:
+      - ".aspx"
+      - ".ashx"
+      - ".asmx"
+      - ".asp"
+    uri_query_decoded|contains_any:
+      - "filepath="
+      - "downpath="
+      - "&dir="
+      - "?dir="
+      - "action=download"
+      - "action=delete"
+      - "action=rename"
+      - "action=edit"
+      - "delfile="
+      - "editfile="
+      - "downfile="
+  condition: selection
+fields:
+  - timestamp
+  - src_ip
+  - method
+  - uri_path
+  - uri_query
+  - status
+  - user_agent
+falsepositives:
+  - Legitimate file-manager or document-management applications
+  - CMS media libraries
+references:
+  - https://attack.mitre.org/techniques/T1083/

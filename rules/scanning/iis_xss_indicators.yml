@@ -1,0 +1,38 @@
+id: iis_xss_indicators
+title: IIS Cross-Site Scripting Payload Indicators
+status: stable
+description: Detects common XSS payload fragments in decoded query strings.
+level: medium
+tags:
+  - attack.t1189
+  - attack.t1059.007
+logsource:
+  product: iis
+  service: w3c
+detection:
+  selection:
+    uri_query_decoded|contains_any:
+      - "<script"
+      - "javascript:"
+      - "onerror="
+      - "onload="
+      - "onmouseover="
+      - "document.cookie"
+      - "alert("
+      - "<img src="
+      - "<svg"
+      - "eval("
+      - "string.fromcharcode"
+  condition: selection
+fields:
+  - timestamp
+  - src_ip
+  - method
+  - uri_path
+  - uri_query
+  - status
+  - user_agent
+falsepositives:
+  - CMS or editor applications that submit HTML in parameters
+references:
+  - https://owasp.org/www-community/attacks/xss/

@@ -1,0 +1,33 @@
+id: iis_traversal_web_config_access
+title: IIS web.config Access Attempt
+status: stable
+description: >
+  Detects attempts to read IIS web.config files, either directly or through
+  traversal sequences. web.config can expose connection strings, machine keys,
+  and application secrets, making it a high-value target after a traversal or
+  LFI foothold.
+level: high
+tags:
+  - attack.t1190
+  - attack.t1552.001
+logsource:
+  product: iis
+  service: w3c
+detection:
+  selection:
+    url_decoded|contains: "web.config"
+  condition: selection
+fields:
+  - timestamp
+  - src_ip
+  - method
+  - uri_path
+  - uri_query
+  - status
+  - user_agent
+falsepositives:
+  - Monitoring or deployment tooling that references web.config by name
+  - Applications logging their own configuration path
+references:
+  - https://learn.microsoft.com/en-us/iis/configuration/
+  - https://attack.mitre.org/techniques/T1552/001/

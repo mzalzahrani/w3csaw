@@ -1,0 +1,46 @@
+id: iis_webshell_script_in_nonstandard_directory
+title: IIS Dynamic Script Executed From Static Content Directory
+status: experimental
+description: >
+  Detects successful execution of dynamic scripts located under directories that
+  normally serve only static content (images, css, js, fonts, uploads). A
+  dynamic handler running from these paths is a common sign of a dropped web
+  shell.
+level: high
+tags:
+  - attack.t1505.003
+logsource:
+  product: iis
+  service: w3c
+detection:
+  selection:
+    status:
+      gte: 200
+      lt: 300
+    uri_path_decoded|contains_any:
+      - "/images/"
+      - "/img/"
+      - "/css/"
+      - "/js/"
+      - "/scripts/"
+      - "/fonts/"
+      - "/content/"
+      - "/static/"
+      - "/assets/"
+    uri_path_decoded|endswith_any:
+      - ".aspx"
+      - ".ashx"
+      - ".asmx"
+      - ".asp"
+  condition: selection
+fields:
+  - timestamp
+  - src_ip
+  - method
+  - uri_path
+  - status
+  - user_agent
+falsepositives:
+  - Applications that intentionally place handlers under asset folders (e.g. image resizers under /images/)
+references:
+  - https://attack.mitre.org/techniques/T1505/003/

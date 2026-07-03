@@ -1,0 +1,33 @@
+id: iis_agg_path_high_source_volume
+title: IIS Single Path High Request Volume
+status: experimental
+description: >
+  Detects a single URI path receiving an unusually high request volume in a short
+  window, which can indicate a targeted endpoint under brute force, credential
+  stuffing, or a coordinated hit from many sources. Note: this counts total
+  requests to the path, not distinct source IPs; it is the supported
+  approximation for "one path hit by many sources" until distinct-count
+  aggregation is available.
+level: low
+tags:
+  - attack.t1499
+logsource:
+  product: iis
+  service: w3c
+type: aggregation
+aggregation:
+  variant: threshold
+  group_by:
+    - uri_path
+  count_gte: 1000
+  window_minutes: 5
+fields:
+  - timestamp
+  - src_ip
+  - uri_path
+  - status
+  - user_agent
+falsepositives:
+  - Popular pages, static assets, and health-check endpoints on busy sites
+references:
+  - https://attack.mitre.org/techniques/T1499/

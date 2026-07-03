@@ -1,0 +1,36 @@
+id: iis_rce_java_runtime_exec
+title: IIS Java Runtime Command Execution Indicators
+status: experimental
+description: >
+  Detects Java command-execution primitives (Runtime.getRuntime().exec,
+  ProcessBuilder) in the decoded URL, associated with exploitation of Java
+  application components proxied behind IIS or embedded in expression-language
+  payloads.
+level: high
+tags:
+  - attack.t1190
+  - attack.t1059
+logsource:
+  product: iis
+  service: w3c
+detection:
+  selection:
+    url_decoded|contains_any:
+      - "runtime.getruntime"
+      - "getruntime().exec"
+      - "processbuilder"
+      - "java.lang.runtime"
+      - "java.lang.processimpl"
+  condition: selection
+fields:
+  - timestamp
+  - src_ip
+  - method
+  - uri_path
+  - uri_query
+  - status
+  - user_agent
+falsepositives:
+  - Java documentation or code-sharing endpoints
+references:
+  - https://attack.mitre.org/techniques/T1190/

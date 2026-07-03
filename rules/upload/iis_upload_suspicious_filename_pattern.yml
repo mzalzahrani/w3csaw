@@ -1,0 +1,29 @@
+id: iis_upload_suspicious_filename_pattern
+title: IIS Suspicious Uploaded Filename Pattern
+status: experimental
+description: >
+  Detects access to files whose names match common web shell or tool naming
+  conventions (shell, cmd, backdoor, test/tmp scripts with dynamic extensions).
+  Useful for spotting interaction with a dropped payload.
+level: medium
+tags:
+  - attack.t1505.003
+logsource:
+  product: iis
+  service: w3c
+detection:
+  selection:
+    uri_path_decoded|re:
+      - '/(shell|cmd|backdoor|b374k|c99|r57|webshell|bypass|up|dropper|payload|test123|tmp[0-9]+)\.(aspx|ashx|asmx|asp|jsp|php)$'
+  condition: selection
+fields:
+  - timestamp
+  - src_ip
+  - method
+  - uri_path
+  - status
+  - user_agent
+falsepositives:
+  - Legitimate files that happen to include words like test or up in their names
+references:
+  - https://attack.mitre.org/techniques/T1505/003/
