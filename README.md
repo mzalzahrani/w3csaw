@@ -29,18 +29,6 @@ W3CSaw gives incident responders the same workflow Chainsaw gives for event
 logs: point it at a folder of logs and a folder of rules, get back ranked,
 evidence-rich findings in minutes.
 
-## How it differs from Chainsaw
-
-| | Chainsaw | W3CSaw |
-|---|---|---|
-| Input | Windows EVTX event logs | IIS W3C web access logs |
-| Rules | Sigma + Chainsaw rules | Native Sigma-inspired YAML for web fields |
-| Detects | Process, logon, persistence activity | Suspicious HTTP activity (web shells, exploits, scanning, brute force) |
-| Confirms execution | Often yes (process events) | **No** — HTTP evidence only; correlate with host telemetry |
-
-They are complementary: run Chainsaw on the EVTX and W3CSaw on the IIS logs
-from the same server, then join the timelines.
-
 ## Installation
 
 Requires Python 3.9+.
