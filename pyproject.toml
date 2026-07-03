@@ -38,5 +38,8 @@ Homepage = "https://github.com/mzalzahrani/w3csaw"
 [tool.setuptools]
 packages = ["w3csaw"]
 
+[tool.setuptools.package-data]
+w3csaw = ["rules/*/*.yml", "rules/*/*.yaml"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]

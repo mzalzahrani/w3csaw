@@ -5,7 +5,7 @@ import os
 import pytest
 
 FIXTURES = os.path.join(os.path.dirname(__file__), "fixtures")
-RULES_DIR = os.path.join(os.path.dirname(__file__), os.pardir, "rules")
+RULES_DIR = os.path.join(os.path.dirname(__file__), os.pardir, "w3csaw", "rules")
 
 
 @pytest.fixture

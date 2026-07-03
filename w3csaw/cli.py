@@ -171,19 +171,21 @@ def build_parser() -> argparse.ArgumentParser:
     validate = sub.add_parser(
         "validate-rules", help="validate YAML detection rules",
         description="Validate native W3CSaw YAML rules and report any errors.",
-        epilog="examples:\n  w3csaw validate-rules -r rules/\n",
+        epilog="examples:\n  w3csaw validate-rules\n  w3csaw validate-rules -r my-rules/\n",
         formatter_class=argparse.RawDescriptionHelpFormatter)
-    validate.add_argument("-r", "--rules", required=True,
-                          help="rules directory or a single rule file")
+    validate.add_argument("-r", "--rules", default=None,
+                          help="rules directory or a single rule file "
+                               "(default: the bundled W3CSaw rule pack)")
     validate.set_defaults(func=cmd_validate_rules)
 
     info = sub.add_parser(
         "rule-info", help="list loaded rules and their metadata",
         description="List rule ids, levels, types, tags, and titles.",
-        epilog="examples:\n  w3csaw rule-info -r rules/\n",
+        epilog="examples:\n  w3csaw rule-info\n  w3csaw rule-info -r my-rules/\n",
         formatter_class=argparse.RawDescriptionHelpFormatter)
-    info.add_argument("-r", "--rules", required=True,
-                      help="rules directory or a single rule file")
+    info.add_argument("-r", "--rules", default=None,
+                      help="rules directory or a single rule file "
+                           "(default: the bundled W3CSaw rule pack)")
     info.set_defaults(func=cmd_rule_info)
 
     interactive = sub.add_parser(
@@ -359,8 +361,20 @@ def cmd_top(args: argparse.Namespace) -> int:
     return EXIT_OK
 
 
+def _resolve_rules_arg(args: argparse.Namespace) -> Optional[str]:
+    if args.rules:
+        return args.rules
+    resolved = default_rules_dir()
+    if not resolved:
+        logger.error("no rules found; specify one with -r/--rules")
+    return resolved
+
+
 def cmd_validate_rules(args: argparse.Namespace) -> int:
-    rules, errors = load_rules(args.rules)
+    rules_path = _resolve_rules_arg(args)
+    if not rules_path:
+        return EXIT_ERROR
+    rules, errors = load_rules(rules_path)
     for error in errors:
         print(f"[FAIL] {error}")
     print(f"\n{len(rules)} valid rule(s), {len(errors)} error(s)")
@@ -368,7 +382,10 @@ def cmd_validate_rules(args: argparse.Namespace) -> int:
 
 
 def cmd_rule_info(args: argparse.Namespace) -> int:
-    rules, errors = load_rules(args.rules)
+    rules_path = _resolve_rules_arg(args)
+    if not rules_path:
+        return EXIT_ERROR
+    rules, errors = load_rules(rules_path)
     for error in errors:
         logger.warning("rule skipped: %s", error)
     rows = [

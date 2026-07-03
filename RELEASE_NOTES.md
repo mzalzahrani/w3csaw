@@ -6,7 +6,13 @@
   prompts and sensible defaults — no flags required.
 - `scan --rules` is now optional and defaults to the bundled W3CSaw rule pack,
   so `w3csaw scan -i logs/` works out of the box; interactive mode auto-loads
-  it without prompting.
+  it without prompting. `validate-rules` and `rule-info` default to the bundled
+  pack too.
+
+### Changed
+- The rule pack now lives inside the package at `w3csaw/rules/` and is shipped
+  as package data, so `pip install` (including `pip install git+https://…`)
+  bundles all 72 rules. Point `-r` at your own directory to override.
 - Rich terminal output mode for scan results (`--cli`), inspired by offline
   DFIR hunting tools but with W3CSaw's own identity (banner, layout, styling).
 - Findings grouped into severity-aware tables, grouped by category, level,

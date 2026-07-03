@@ -8,7 +8,7 @@ Chainsaw, but instead of scanning Windows EVTX, it parses IIS web access logs
 and applies web-focused detection rules.
 
 ```
-w3csaw scan -i "C:\inetpub\logs\LogFiles\W3SVC1\*.log" -r rules/ -o findings.jsonl --summary
+w3csaw scan -i "C:\inetpub\logs\LogFiles\W3SVC1\*.log" -o findings.jsonl --summary
 ```
 
 ## Why W3CSaw exists
@@ -78,8 +78,8 @@ flag-driven usage for scripting and automation.
 ### scan — hunt with detection rules
 
 ```
-w3csaw scan -i "C:\inetpub\logs\LogFiles\W3SVC1\*.log" -r rules/ -o findings.jsonl --format jsonl
-w3csaw scan -i logs/ -r rules/ -o report.md --format md --min-level medium --summary
+w3csaw scan -i "C:\inetpub\logs\LogFiles\W3SVC1\*.log" -o findings.jsonl --format jsonl
+w3csaw scan -i logs/ -o report.md --format md --min-level medium --summary
 ```
 
 | Option | Meaning |
@@ -107,16 +107,16 @@ and Markdown formats are unchanged.
 
 ```
 # Terminal review (findings grouped by category)
-w3csaw scan -i examples/sample_iis.log -r rules/ --cli
+w3csaw scan -i examples/sample_iis.log --cli
 
 # Show full, untruncated field values
-w3csaw scan -i examples/sample_iis.log -r rules/ --cli --full
+w3csaw scan -i examples/sample_iis.log --cli --full
 
 # Machine output to a file AND a terminal review at the same time
-w3csaw scan -i logs/ -r rules/ --format jsonl -o findings.jsonl --cli
+w3csaw scan -i logs/ --format jsonl -o findings.jsonl --cli
 
 # Group the terminal findings by severity instead of category
-w3csaw scan -i examples/sample_iis.log -r rules/ --cli --group-by level
+w3csaw scan -i examples/sample_iis.log --cli --group-by level
 ```
 
 Example (colors shown here as plain text):
@@ -131,13 +131,13 @@ Example (colors shown here as plain text):
 W3CSaw — Chainsaw-style DFIR hunting for IIS W3C logs
 By TruePositive / Mohammed Alzahrani (@mzalzahrani)
 
-[+] Loading detection rules from: rules/
+[+] Loading detection rules from: w3csaw/rules
 [+] Loaded 72 detection rules
 [+] Loading IIS W3C logs from: examples/sample_iis.log
 [+] Parsed 342 log records from 1 file(s)
 ╭─────── W3CSaw v0.1.0 scan summary ────────╮
 │            Input  examples/sample_iis.log │
-│            Rules  rules/ (72 loaded)      │
+│            Rules  w3csaw/rules (72 loaded)│
 │     Files parsed  1                       │
 │     Lines parsed  342                     │
 │         Findings  162                     │
@@ -192,8 +192,8 @@ Supported fields: `src_ip`, `uri_path`, `user_agent`, `status`, `method`,
 ### validate-rules / rule-info
 
 ```
-w3csaw validate-rules -r rules/
-w3csaw rule-info -r rules/
+w3csaw validate-rules
+w3csaw rule-info
 ```
 
 ## Help and exit codes
@@ -230,7 +230,7 @@ playbooks, and shell scripts can branch on "were there findings?" without
 parsing output. For example:
 
 ```bash
-w3csaw scan -i logs/ -r rules/ -o findings.jsonl
+w3csaw scan -i logs/ -o findings.jsonl
 case $? in
   0) echo "clean" ;;
   2) echo "findings detected — escalate" ;;
@@ -330,7 +330,8 @@ Three variants:
 
 ## Bundled rule pack
 
-21 starter rules under `rules/` covering web shell interaction, known shell
+72 rules ship in the package under `w3csaw/rules/` (loaded automatically),
+covering web shell interaction, known shell
 filenames, suspicious POSTs, path traversal, double encoding, SQLi/XSS/LDAP
 injection, SSTI, Log4Shell, Struts OGNL, Jolokia, OFBiz, Tomcat/JSP uploads,
 Exchange/OWA exploitation, SharePoint uploads, MinIO SSRF, scanner user
@@ -365,7 +366,7 @@ W3CSaw produced from it.
 ## DFIR workflow
 
 1. Collect `C:\inetpub\logs\LogFiles\W3SVC*\*.log` from the suspect server.
-2. `w3csaw scan -i logs/ -r rules/ -o findings.jsonl --summary`
+2. `w3csaw scan -i logs/ -o findings.jsonl --summary`
 3. Triage by severity, then pivot: `w3csaw top -i logs/ --by src_ip` and
    `w3csaw timeline -i logs/ -o timeline.csv` around finding timestamps.
 4. **Correlate every hit with host telemetry** before calling it execution:
