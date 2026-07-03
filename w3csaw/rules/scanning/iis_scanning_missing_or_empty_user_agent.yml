@@ -13,13 +13,13 @@ logsource:
   product: iis
   service: w3c
 detection:
-  selection_missing:
+  selection:
     user_agent|not_exists: true
-  selection_empty:
-    user_agent|in:
-      - "-"
-      - ""
-  condition: selection_missing or selection_empty
+  # Exchange Managed Availability / load-balancer health probes legitimately
+  # send no user agent. They hammer */healthcheck.htm and drown out real signal.
+  filter_health_probe:
+    uri_path|endswith: "/healthcheck.htm"
+  condition: selection and not filter_health_probe
 fields:
   - timestamp
   - src_ip

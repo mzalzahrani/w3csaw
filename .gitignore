@@ -8,7 +8,14 @@ dist/
 .pytest_cache/
 .coverage
 
-# scan output artifacts
-findings.jsonl
-*.tmp
+# scan output artifacts (may contain real log data — never commit)
+findings*
+*findings*
+*.jsonl
+timeline*.csv
 timeline.csv
+*.tmp
+# real logs must never enter the repo
+*.log
+!examples/*.log
+!tests/**/*.log

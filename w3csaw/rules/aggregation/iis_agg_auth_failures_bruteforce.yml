@@ -21,7 +21,10 @@ aggregation:
     status|in:
       - 401
       - 403
-  count_gte: 30
+  # Raised from 30. NTLM/Negotiate endpoints emit a 401 challenge on nearly
+  # every authenticated request, so busy Exchange clients trivially exceed a
+  # low threshold. Correlate hits with 4625 (failed logon) before escalating.
+  count_gte: 100
   window_minutes: 15
 fields:
   - timestamp

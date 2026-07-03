@@ -10,14 +10,15 @@ logsource:
   product: iis
   service: w3c
 detection:
+  # NOTE: the generic "(url|redirect|...)=https://" param match was removed —
+  # it fired on normal OWA/SSO redirect parameters and is unrelated to the MinIO
+  # CVE this rule is named for. External-URL/metadata SSRF is covered by
+  # iis_rce_ssrf_cloud_metadata.
   selection_minio:
     uri_path_decoded|contains_any:
       - "/minio/bootstrap/"
       - "/minio/admin/"
-  selection_ssrf_param:
-    uri_query_decoded|re:
-      - "(?:url|uri|target|dest|redirect|callback|endpoint)=https?://"
-  condition: selection_minio or selection_ssrf_param
+  condition: selection_minio
 fields:
   - timestamp
   - src_ip

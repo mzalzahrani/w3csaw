@@ -21,6 +21,11 @@ detection:
       - "POST"
       - "HEAD"
       - "OPTIONS"
+      # Legitimate Exchange Outlook Anywhere (RPC-over-HTTP) verbs.
+      # PUT/DELETE/PATCH/PROPFIND are intentionally NOT allow-listed — they
+      # remain worth surfacing (e.g. WebDAV PUT web-shell upload).
+      - "RPC_IN_DATA"
+      - "RPC_OUT_DATA"
   condition: selection and not filter
 fields:
   - timestamp

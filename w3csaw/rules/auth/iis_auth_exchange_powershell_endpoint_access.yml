@@ -20,11 +20,12 @@ detection:
       - "/ecp/proxylogon"
       - "/mapi/emsmdb"
       - "/ews/exchange.asmx"
+    # Tightened to genuine ProxyShell/ProxyNotShell SSRF tokens. "clientapplication="
+    # and "encoding=xml" were removed — they appear in normal Exchange remote
+    # PowerShell / management traffic and caused the bulk of the false positives.
     uri_query_decoded|contains_any:
       - "x-rps-cat"
       - "email=autodiscover"
-      - "encoding=xml"
-      - "clientapplication="
   condition: selection
 fields:
   - timestamp

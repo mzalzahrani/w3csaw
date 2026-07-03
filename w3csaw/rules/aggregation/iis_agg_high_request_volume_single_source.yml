@@ -19,7 +19,9 @@ aggregation:
   variant: threshold
   group_by:
     - src_ip
-  count_gte: 500
+  # Raised from 500. Exchange CAS/proxy nodes, load balancers and NAT egress IPs
+  # legitimately generate very high per-source volume; 500/10min is normal there.
+  count_gte: 2000
   window_minutes: 10
 fields:
   - timestamp

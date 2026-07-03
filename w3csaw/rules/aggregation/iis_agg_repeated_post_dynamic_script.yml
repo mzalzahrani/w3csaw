@@ -20,7 +20,9 @@ aggregation:
     - uri_path
   filter:
     method: POST
-  count_gte: 25
+  # Raised from 25. Outlook/EWS/MAPI drive one endpoint (e.g. /mapi/emsmdb,
+  # /EWS/Exchange.asmx) with many POSTs per session; 25 is normal traffic.
+  count_gte: 100
   window_minutes: 10
 fields:
   - timestamp

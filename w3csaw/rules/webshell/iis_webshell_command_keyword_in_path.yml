@@ -15,10 +15,12 @@ logsource:
   service: w3c
 detection:
   selection:
+    # NOTE: "/powershell" removed — it is the legitimate Exchange Remote
+    # PowerShell endpoint (used by Microsoft WinRM Client), not an OS command.
+    # Exchange PowerShell *abuse* is covered by iis_auth_exchange_powershell_endpoint_access.
     uri_path_decoded|contains_any:
       - "/whoami"
       - "/ipconfig"
-      - "/powershell"
       - "/certutil"
       - "/net%20user"
       - "/net user"

@@ -12,13 +12,16 @@ logsource:
   service: w3c
 detection:
   selection_ssrf:
+    # NOTE: bare "/mapi/nspi" was removed — it is the normal MAPI/HTTP address
+    # book endpoint and every Outlook client hits it, producing critical FPs.
+    # Only genuine ProxyLogon/ProxyShell SSRF IOCs remain below.
     url_decoded|contains_any:
       - "/autodiscover/autodiscover.json?@"
       - "/ecp/y.js"
       - "/ecp/x.js"
       - "/ecp/ddi/ddiservice.svc/setobject"
-      - "/mapi/nspi"
       - "x-anonresource-backend"
+      - "x-beresource"
       - "/powershell/?x="
   selection_shell_drop:
     uri_path_decoded|contains_any:

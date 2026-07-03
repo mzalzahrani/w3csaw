@@ -19,7 +19,9 @@ aggregation:
   variant: threshold
   group_by:
     - uri_path
-  count_gte: 1000
+  # Raised from 1000. Shared Exchange endpoints (/mapi/emsmdb, /EWS/Exchange.asmx,
+  # health probes) receive very high aggregate volume from all clients normally.
+  count_gte: 5000
   window_minutes: 5
 fields:
   - timestamp

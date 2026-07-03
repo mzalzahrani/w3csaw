@@ -21,8 +21,11 @@ aggregation:
     status:
       gte: 200
       lt: 300
-  count_gte: 10
-  window_minutes: 30
+  # Raised from 10. On Windows-auth endpoints (Exchange/NTLM/Kerberos) a 401
+  # challenge before a 200 is the *normal* handshake, so a low threshold is
+  # pure noise. Confirm real brute force against Security.evtx 4625 events.
+  count_gte: 30
+  window_minutes: 15
 fields:
   - src_ip
   - status
