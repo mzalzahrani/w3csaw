@@ -44,12 +44,15 @@ def level_at_least(level: str, minimum: str) -> bool:
 def expand_inputs(input_spec: str) -> List[str]:
     """Expand a file path, directory, or glob into a sorted list of log files.
 
-    Directories are searched recursively for *.log files.
+    Directories are searched recursively for *.log and *.csv files.
     """
     if os.path.isfile(input_spec):
         return [input_spec]
     if os.path.isdir(input_spec):
-        matches = glob.glob(os.path.join(input_spec, "**", "*.log"), recursive=True)
+        matches = []
+        for pattern in ("*.log", "*.csv"):
+            matches.extend(glob.glob(os.path.join(input_spec, "**", pattern),
+                                     recursive=True))
         return sorted(os.path.normpath(p) for p in matches)
     matches = glob.glob(input_spec, recursive=True)
     files = sorted(os.path.normpath(p) for p in matches if os.path.isfile(p))
