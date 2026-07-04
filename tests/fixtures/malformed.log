@@ -1,6 +1,0 @@
-#Software: Microsoft Internet Information Services 10.0
-#Fields: date time c-ip cs-method cs-uri-stem sc-status
-2026-07-03 12:00:01 10.1.1.1 GET /ok.html 200
-2026-07-03 12:00:02 10.1.1.1 GET
-this is not a valid line at all
-2026-07-03 12:00:03 10.1.1.2 GET /also-ok.html 200

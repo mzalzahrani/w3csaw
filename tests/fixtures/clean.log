@@ -1,6 +1,0 @@
-#Software: Microsoft Internet Information Services 10.0
-#Version: 1.0
-#Fields: date time c-ip cs-method cs-uri-stem cs-uri-query cs(User-Agent) sc-status
-2026-07-03 09:00:01 192.168.1.10 GET /index.html - Mozilla/5.0+(Windows+NT+10.0) 200
-2026-07-03 09:00:02 192.168.1.10 GET /home.html - Mozilla/5.0+(Windows+NT+10.0) 200
-2026-07-03 09:00:03 192.168.1.11 GET /about.html - Mozilla/5.0+(Windows+NT+10.0) 200
