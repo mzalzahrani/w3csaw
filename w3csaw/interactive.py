@@ -32,7 +32,7 @@ def _ask_input(console) -> str:
     default = _default_input()
     while True:
         path = Prompt.ask(
-            "Path to IIS log file, directory, or glob",
+            "Path to IIS log file (.log or .csv), directory, or glob",
             default=default, console=console).strip()
         try:
             files = expand_inputs(path)

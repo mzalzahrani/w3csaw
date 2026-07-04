@@ -7,6 +7,11 @@ IIS W3C logs. It is inspired by the offline hunting workflow of tools like
 Chainsaw, but instead of scanning Windows EVTX, it parses IIS web access logs
 and applies web-focused detection rules.
 
+Inputs can be native W3C `.log` files or `.csv` exports (e.g. from Log
+Parser, Excel, or a SIEM). CSV files need a header row; common column-name
+variants like `cs_uri_stem`, `client_ip`, or `User-Agent` are recognized
+automatically.
+
 > **Looking to hunt Windows event logs?** W3CSaw is for IIS web access logs, not
 > EVTX. If you need to hunt Windows Event Logs, check out
 > [Chainsaw](https://github.com/WithSecureLabs/chainsaw) — the two are
@@ -78,7 +83,7 @@ w3csaw scan -i logs/ -o report.md --format md --min-level medium --summary
 
 | Option | Meaning |
 |---|---|
-| `-i, --input` | Log file, directory (recursive `*.log`), or glob |
+| `-i, --input` | Log file (`.log` W3C or `.csv` export), directory (recursive `*.log`/`*.csv`), or glob |
 | `-r, --rules` | Rules directory or single rule file (default: the bundled W3CSaw rule pack) |
 | `-o, --output` | Output file (default: stdout) |
 | `--format` | `jsonl`, `csv`, or `md` (default: jsonl) |
