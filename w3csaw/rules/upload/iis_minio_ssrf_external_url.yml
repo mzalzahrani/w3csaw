@@ -1,0 +1,33 @@
+id: iis_minio_ssrf_external_url
+title: IIS MinIO SSRF or External URL Parameter Pattern
+status: experimental
+description: Detects MinIO admin/bootstrap endpoint access and external URL values in query parameters, associated with MinIO information disclosure (CVE-2023-28432) and SSRF-style abuse.
+level: high
+tags:
+  - attack.t1190
+  - cve.2023.28432
+logsource:
+  product: iis
+  service: w3c
+detection:
+  # NOTE: the generic "(url|redirect|...)=https://" param match was removed —
+  # it fired on normal OWA/SSO redirect parameters and is unrelated to the MinIO
+  # CVE this rule is named for. External-URL/metadata SSRF is covered by
+  # iis_rce_ssrf_cloud_metadata.
+  selection_minio:
+    uri_path_decoded|contains_any:
+      - "/minio/bootstrap/"
+      - "/minio/admin/"
+  condition: selection_minio
+fields:
+  - timestamp
+  - src_ip
+  - method
+  - uri_path
+  - uri_query
+  - status
+falsepositives:
+  - OAuth/SSO redirect parameters pointing at trusted domains
+  - Webhook configuration endpoints
+references:
+  - https://nvd.nist.gov/vuln/detail/CVE-2023-28432

@@ -1,0 +1,38 @@
+id: iis_scanning_common_appserver_paths
+title: IIS Probing for Common Application Server Endpoints
+status: experimental
+description: >
+  Detects requests to widely targeted application-server and framework
+  endpoints (Spring Actuator, Struts, JBoss, cgi-bin, Tomcat). These are
+  frequently swept by mass scanners looking for known vulnerabilities.
+level: low
+tags:
+  - attack.t1595.002
+logsource:
+  product: iis
+  service: w3c
+detection:
+  selection:
+    uri_path_decoded|contains_any:
+      - "/actuator/"
+      - "/cgi-bin/"
+      - "/struts/"
+      - "/jolokia/"
+      - "/invoker/"
+      - "/web-console/"
+      - "/solr/"
+      - "/druid/"
+      - "/hudson/"
+      - "/rails/info"
+  condition: selection
+fields:
+  - timestamp
+  - src_ip
+  - method
+  - uri_path
+  - status
+  - user_agent
+falsepositives:
+  - Legitimate monitoring endpoints (e.g. internal Actuator health checks)
+references:
+  - https://attack.mitre.org/techniques/T1595/002/

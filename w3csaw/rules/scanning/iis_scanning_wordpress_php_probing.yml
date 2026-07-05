@@ -1,0 +1,35 @@
+id: iis_scanning_wordpress_php_probing
+title: IIS Probing for WordPress or PHP Endpoints
+status: experimental
+description: >
+  Detects requests for WordPress and PHP endpoints on an IIS server. Because IIS
+  sites rarely serve these by default, such requests usually indicate blind mass
+  scanning for vulnerable PHP/WordPress installs.
+level: low
+tags:
+  - attack.t1595.002
+logsource:
+  product: iis
+  service: w3c
+detection:
+  selection:
+    uri_path_decoded|contains_any:
+      - "/wp-login.php"
+      - "/xmlrpc.php"
+      - "/wp-content/"
+      - "/wp-includes/"
+      - "/wp-json/"
+      - "/index.php?"
+      - "/vendor/phpunit"
+  condition: selection
+fields:
+  - timestamp
+  - src_ip
+  - method
+  - uri_path
+  - status
+  - user_agent
+falsepositives:
+  - Servers that genuinely host PHP or WordPress content behind IIS/ARR
+references:
+  - https://attack.mitre.org/techniques/T1595/002/

@@ -1,0 +1,40 @@
+id: iis_upload_webdav_methods
+title: IIS Suspicious WebDAV Methods
+status: experimental
+description: >
+  Detects WebDAV and file-writing HTTP methods (PUT, DELETE, PROPFIND, MKCOL,
+  COPY, MOVE, LOCK). If WebDAV is not an intended feature of the site, these
+  methods can be used to write or move files, including web shells, into the web
+  root.
+level: medium
+tags:
+  - attack.t1190
+  - attack.t1505.003
+logsource:
+  product: iis
+  service: w3c
+detection:
+  selection:
+    method|in:
+      - "PUT"
+      - "DELETE"
+      - "PROPFIND"
+      - "PROPPATCH"
+      - "MKCOL"
+      - "COPY"
+      - "MOVE"
+      - "LOCK"
+      - "UNLOCK"
+  condition: selection
+fields:
+  - timestamp
+  - src_ip
+  - method
+  - uri_path
+  - status
+  - user_agent
+falsepositives:
+  - Sites that intentionally use WebDAV for content authoring
+references:
+  - https://learn.microsoft.com/en-us/iis/configuration/system.webserver/webdav/
+  - https://attack.mitre.org/techniques/T1190/

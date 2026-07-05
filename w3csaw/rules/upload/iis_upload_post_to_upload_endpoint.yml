@@ -1,0 +1,39 @@
+id: iis_upload_post_to_upload_endpoint
+title: IIS POST to File Upload Endpoint
+status: experimental
+description: >
+  Detects POST requests to endpoints whose paths suggest file upload
+  functionality. Low severity on its own, but the entry point for web shell
+  delivery; correlate with subsequent access to newly created scripts under the
+  same directory.
+level: low
+tags:
+  - attack.t1105
+  - attack.t1505.003
+logsource:
+  product: iis
+  service: w3c
+detection:
+  selection:
+    method: POST
+    uri_path_decoded|contains_any:
+      - "/upload"
+      - "/uploads"
+      - "/fileupload"
+      - "/api/upload"
+      - "/attachments"
+      - "/import"
+      - "/media/upload"
+  condition: selection
+fields:
+  - timestamp
+  - src_ip
+  - method
+  - uri_path
+  - status
+  - user_agent
+  - bytes_received
+falsepositives:
+  - Normal application file uploads by authenticated users
+references:
+  - https://attack.mitre.org/techniques/T1105/

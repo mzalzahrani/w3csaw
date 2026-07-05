@@ -1,0 +1,41 @@
+id: iis_rce_log4shell_obfuscated
+title: IIS Obfuscated Log4Shell JNDI Lookup
+status: stable
+description: >
+  Detects obfuscated Log4Shell (CVE-2021-44228) JNDI lookup variants that use
+  nested Log4j lookups to bypass naive string matching (for example ${lower:j},
+  ${::-j}, ${env:}, ${sys:}). Complements the base Log4Shell rule which matches
+  the plain ${jndi: form.
+level: critical
+tags:
+  - attack.t1190
+  - attack.t1059
+  - cve.2021.44228
+logsource:
+  product: iis
+  service: w3c
+detection:
+  selection:
+    url_decoded|contains_any:
+      - "${lower:"
+      - "${upper:"
+      - "${::-"
+      - "${env:"
+      - "${sys:"
+      - "${date:"
+      - "jndi:${"
+      - "j}${"
+  condition: selection
+fields:
+  - timestamp
+  - src_ip
+  - method
+  - uri_path
+  - uri_query
+  - user_agent
+  - status
+falsepositives:
+  - Vulnerability scanners testing for Log4Shell exposure
+references:
+  - https://nvd.nist.gov/vuln/detail/CVE-2021-44228
+  - https://www.cisa.gov/news-events/cybersecurity-advisories/aa21-356a

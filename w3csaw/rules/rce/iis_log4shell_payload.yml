@@ -1,0 +1,33 @@
+id: iis_log4shell_payload
+title: IIS Possible Log4Shell (CVE-2021-44228) Payload
+status: stable
+description: Detects JNDI lookup payloads in the URL, query string, user agent, or referer, associated with Log4Shell exploitation of backend Java components.
+level: critical
+tags:
+  - attack.t1190
+  - attack.t1059
+  - cve.2021.44228
+logsource:
+  product: iis
+  service: w3c
+detection:
+  selection_url:
+    url_decoded|contains_any:
+      - "${jndi:"
+      - "${${"
+      - "%24%7bjndi"
+  selection_headers:
+    user_agent|contains: "${jndi:"
+  condition: selection_url or selection_headers
+fields:
+  - timestamp
+  - src_ip
+  - method
+  - uri_path
+  - uri_query
+  - user_agent
+  - status
+falsepositives:
+  - Security scanning for Log4Shell exposure
+references:
+  - https://nvd.nist.gov/vuln/detail/CVE-2021-44228

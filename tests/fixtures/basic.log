@@ -1,0 +1,8 @@
+#Software: Microsoft Internet Information Services 10.0
+#Version: 1.0
+#Date: 2026-07-03 10:00:00
+#Fields: date time s-sitename s-ip cs-method cs-uri-stem cs-uri-query c-ip cs-username cs(User-Agent) cs(Referer) sc-status sc-substatus sc-win32-status sc-bytes cs-bytes time-taken
+2026-07-03 10:00:01 W3SVC1 10.0.0.5 GET /index.html - 192.168.1.10 - Mozilla/5.0+(Windows+NT+10.0) http://example.com/ 200 0 0 1523 431 15
+2026-07-03 10:00:02 W3SVC1 10.0.0.5 GET /images/logo.png - 192.168.1.10 - Mozilla/5.0+(Windows+NT+10.0) http://example.com/index.html 200 0 0 8842 380 4
+2026-07-03 10:00:05 W3SVC1 10.0.0.5 POST /login.aspx - 192.168.1.20 jdoe Mozilla/5.0+(Windows+NT+10.0) http://example.com/login.aspx 302 0 0 512 890 120
+2026-07-03 10:00:09 W3SVC1 10.0.0.5 GET /missing.html - 192.168.1.30 - curl/8.0 - 404 0 2 1245 210 2

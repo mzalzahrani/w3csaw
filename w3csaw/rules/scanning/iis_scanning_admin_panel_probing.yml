@@ -1,0 +1,40 @@
+id: iis_scanning_admin_panel_probing
+title: IIS Administrative Panel Probing
+status: experimental
+description: >
+  Detects requests to common administrative and management panel paths. On its
+  own this is low fidelity, but a burst of such requests from one source
+  (correlate with the 404-volume aggregation) is characteristic of automated
+  content discovery.
+level: low
+tags:
+  - attack.t1595.003
+logsource:
+  product: iis
+  service: w3c
+detection:
+  selection:
+    uri_path_decoded|contains_any:
+      - "/phpmyadmin"
+      - "/administrator/"
+      - "/wp-admin"
+      - "/manager/html"
+      - "/admin/login"
+      - "/adminer"
+      - "/solr/admin"
+      - "/console/"
+      - "/jmx-console"
+      - "/cpanel"
+      - "/webadmin"
+  condition: selection
+fields:
+  - timestamp
+  - src_ip
+  - method
+  - uri_path
+  - status
+  - user_agent
+falsepositives:
+  - Legitimate administrators accessing management interfaces
+references:
+  - https://attack.mitre.org/techniques/T1595/003/

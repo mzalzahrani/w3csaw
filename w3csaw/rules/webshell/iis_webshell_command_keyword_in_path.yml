@@ -1,0 +1,41 @@
+id: iis_webshell_command_keyword_in_path
+title: IIS Command Execution Keyword in URI Path
+status: experimental
+description: >
+  Detects operating-system command keywords embedded directly in the decoded
+  URI path (not the query string). Some web shells and RESTful shell handlers
+  place the command in path segments, which the query-string command rule would
+  miss.
+level: high
+tags:
+  - attack.t1505.003
+  - attack.t1059
+logsource:
+  product: iis
+  service: w3c
+detection:
+  selection:
+    # NOTE: "/powershell" removed — it is the legitimate Exchange Remote
+    # PowerShell endpoint (used by Microsoft WinRM Client), not an OS command.
+    # Exchange PowerShell *abuse* is covered by iis_auth_exchange_powershell_endpoint_access.
+    uri_path_decoded|contains_any:
+      - "/whoami"
+      - "/ipconfig"
+      - "/certutil"
+      - "/net%20user"
+      - "/net user"
+      - "/cmd.exe"
+      - "/systeminfo"
+      - "/tasklist"
+  condition: selection
+fields:
+  - timestamp
+  - src_ip
+  - method
+  - uri_path
+  - status
+  - user_agent
+falsepositives:
+  - Documentation, help, or wiki paths that legitimately contain these words
+references:
+  - https://attack.mitre.org/techniques/T1059/

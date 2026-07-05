@@ -1,0 +1,32 @@
+id: iis_ldap_injection
+title: IIS LDAP Injection Indicators
+status: experimental
+description: Detects LDAP filter injection patterns in decoded query strings.
+level: medium
+tags:
+  - attack.t1190
+logsource:
+  product: iis
+  service: w3c
+detection:
+  selection:
+    uri_query_decoded|contains_any:
+      - ")(|"
+      - ")(&"
+      - "*)(uid="
+      - "*)(cn="
+      - "*)(objectclass="
+      - "(objectclass=*)"
+      - "admin*)((|"
+  condition: selection
+fields:
+  - timestamp
+  - src_ip
+  - method
+  - uri_path
+  - uri_query
+  - status
+falsepositives:
+  - Directory management applications passing raw LDAP filters
+references:
+  - https://owasp.org/www-community/attacks/LDAP_Injection

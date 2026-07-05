@@ -1,0 +1,35 @@
+id: iis_webshell_offensive_tool_user_agent
+title: IIS Web Shell Management Tool User Agent
+status: experimental
+description: >
+  Detects user agents associated with web shell management frameworks such as
+  Behinder, Godzilla, AntSword, and Weevely. These tools connect to already
+  deployed web shells; their presence indicates active post-exploitation.
+level: high
+tags:
+  - attack.t1505.003
+  - attack.t1071.001
+logsource:
+  product: iis
+  service: w3c
+detection:
+  selection:
+    user_agent|contains_any:
+      - "antSword"
+      - "Behinder"
+      - "Godzilla"
+      - "weevely"
+      - "China Chopper"
+      - "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Win64; x64; Trident/5.0)"
+  condition: selection
+fields:
+  - timestamp
+  - src_ip
+  - method
+  - uri_path
+  - status
+  - user_agent
+falsepositives:
+  - Rare user-agent collisions with the generic MSIE string (correlate with the accessed path and behavior)
+references:
+  - https://attack.mitre.org/techniques/T1505/003/

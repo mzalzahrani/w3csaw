@@ -1,0 +1,37 @@
+id: iis_traversal_windows_path
+title: IIS Windows Absolute Path Access Attempt
+status: stable
+description: >
+  Detects requests referencing Windows absolute paths or system directories in
+  the decoded URL, indicating attempts to read files outside the web root via
+  absolute-path injection.
+level: high
+tags:
+  - attack.t1190
+  - attack.t1083
+logsource:
+  product: iis
+  service: w3c
+detection:
+  selection:
+    url_decoded|contains_any:
+      - "c:\\windows"
+      - "c:/windows"
+      - "\\windows\\system32"
+      - "/windows/system32"
+      - "c:\\inetpub"
+      - "c:\\users"
+      - "\\\\?\\c:"
+  condition: selection
+fields:
+  - timestamp
+  - src_ip
+  - method
+  - uri_path
+  - uri_query
+  - status
+  - user_agent
+falsepositives:
+  - Applications that legitimately accept Windows file paths as parameters (rare on internet-facing sites)
+references:
+  - https://owasp.org/www-community/attacks/Path_Traversal

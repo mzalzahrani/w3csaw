@@ -1,0 +1,40 @@
+id: iis_agg_auth_failures_bruteforce
+title: IIS Repeated Authentication Failures From Single Source
+status: experimental
+description: >
+  Detects a source IP producing a high volume of 401/403 authentication failures
+  in a window, without requiring a subsequent success. Complements the
+  brute-force-then-success sequence rule by catching ongoing or unsuccessful
+  brute-force attempts.
+level: medium
+tags:
+  - attack.t1110
+logsource:
+  product: iis
+  service: w3c
+type: aggregation
+aggregation:
+  variant: threshold
+  group_by:
+    - src_ip
+  filter:
+    status|in:
+      - 401
+      - 403
+  # Raised from 30. NTLM/Negotiate endpoints emit a 401 challenge on nearly
+  # every authenticated request, so busy Exchange clients trivially exceed a
+  # low threshold. Correlate hits with 4625 (failed logon) before escalating.
+  count_gte: 100
+  window_minutes: 15
+fields:
+  - timestamp
+  - src_ip
+  - username
+  - uri_path
+  - status
+  - user_agent
+falsepositives:
+  - Users or services with stale credentials retrying frequently
+  - Reverse proxies surfacing upstream auth failures
+references:
+  - https://attack.mitre.org/techniques/T1110/

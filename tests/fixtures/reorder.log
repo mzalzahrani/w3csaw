@@ -1,0 +1,8 @@
+#Software: Microsoft Internet Information Services 10.0
+#Version: 1.0
+#Fields: date time c-ip cs-method cs-uri-stem sc-status
+2026-07-03 11:00:01 172.16.0.9 GET /a.html 200
+2026-07-03 11:00:02 172.16.0.9 GET /b.html 404
+#Fields: date time cs-method sc-status cs-uri-stem cs-uri-query c-ip
+2026-07-03 11:05:01 GET 200 /c.aspx id=5 172.16.0.10
+2026-07-03 11:05:02 POST 500 /d.aspx - 172.16.0.11

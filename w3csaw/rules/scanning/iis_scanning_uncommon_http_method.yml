@@ -1,0 +1,41 @@
+id: iis_scanning_uncommon_http_method
+title: IIS Uncommon HTTP Method
+status: experimental
+description: >
+  Detects HTTP methods outside the common set used by normal web applications.
+  Uncommon methods can indicate WebDAV abuse, method-based access-control
+  bypass, or protocol fuzzing. Uses an allow-list filter so only unexpected
+  methods are reported.
+level: medium
+tags:
+  - attack.t1595
+logsource:
+  product: iis
+  service: w3c
+detection:
+  selection:
+    method|exists: true
+  filter:
+    method|in:
+      - "GET"
+      - "POST"
+      - "HEAD"
+      - "OPTIONS"
+      # Legitimate Exchange Outlook Anywhere (RPC-over-HTTP) verbs.
+      # PUT/DELETE/PATCH/PROPFIND are intentionally NOT allow-listed — they
+      # remain worth surfacing (e.g. WebDAV PUT web-shell upload).
+      - "RPC_IN_DATA"
+      - "RPC_OUT_DATA"
+  condition: selection and not filter
+fields:
+  - timestamp
+  - src_ip
+  - method
+  - uri_path
+  - status
+  - user_agent
+falsepositives:
+  - REST APIs using PUT/PATCH/DELETE
+  - WebDAV-enabled sites (PROPFIND, MKCOL)
+references:
+  - https://attack.mitre.org/techniques/T1595/
